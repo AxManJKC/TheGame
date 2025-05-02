@@ -1,19 +1,16 @@
 package main;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class Game {
     public Game() {
-        JFrame frame = new JFrame("The Game");
+        JFrame frame = new JFrame("Movement Test");
         GamePanel panel = new GamePanel();
-
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
         frame.add(panel);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-
-        panel.startGameLoop();
+        panel.startGame();
     }
 }

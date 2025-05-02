@@ -1,81 +1,72 @@
 package main;
 
-import input.KeyHandler;
-
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
-public class GamePanel extends JPanel implements Runnable {
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
+public class GamePanel extends JPanel implements Runnable, KeyListener {
 
-    //Screen settings
-    final int TILE_SIZE = 32;
-    final int SCREEN_COLS = 20;
-    final int SCREEN_ROWS = 15;
-    final int SCREEN_WIDTH = TILE_SIZE * SCREEN_COLS;
-    final int SCREEN_HEIGHT = TILE_SIZE * SCREEN_ROWS;
-
+    int playerX = 100, playerY = 100, speed = 4;
+    boolean up, down, left, right;
     Thread gameThread;
-    int FPS = 60;
-
-    //Player position
-    public int playerX = 100;
-    public int playerY = 100;
-    public int playerSpeed = 4;
-
-    KeyHandler keyHandler = new KeyHandler();
 
     public GamePanel() {
-
-        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
-        this.setBackground(Color.BLACK);
-        this.setDoubleBuffered(true);
-        this.addKeyListener(keyHandler);
+        setPreferredSize(new Dimension(640, 480));
+        setBackground(Color.BLACK);
+        setFocusable(true);
+        addKeyListener(this);
+        requestFocusInWindow(); // Ensure focus
     }
 
-    public void startGameLoop() {
-
+    public void startGame() {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
     @Override
     public void run() {
-
-        double drawInterval = 1000000000.00 / FPS;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
-
-        while (gameThread != null) {
-            currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
-            lastTime = currentTime;
-
-            if (delta >= 1) {
-                update();
-                repaint();
-                delta--;
-            }
+        while (true) {
+            update();
+            repaint();
+            try { Thread.sleep(16); } catch (Exception e) {}
         }
-
     }
 
     public void update() {
-
-        if (keyHandler.up) playerY -= playerSpeed;
-        if (keyHandler.down) playerY += playerSpeed;
-        if (keyHandler.left) playerX -= playerSpeed;
-        if (keyHandler.right) playerX += playerSpeed;
+        if (up) playerY -= speed;
+        if (down) playerY += speed;
+        if (left) playerX -= speed;
+        if (right) playerX += speed;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-
         super.paintComponent(g);
-
         g.setColor(Color.WHITE);
-        g.fillRect(playerX, playerY, TILE_SIZE, TILE_SIZE);
-
-        g.dispose();
+        g.fillRect(playerX, playerY, 32, 32);
     }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_W -> up = true;
+            case KeyEvent.VK_S -> down = true;
+            case KeyEvent.VK_A -> left = true;
+            case KeyEvent.VK_D -> right = true;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_W -> up = false;
+            case KeyEvent.VK_S -> down = false;
+            case KeyEvent.VK_A -> left = false;
+            case KeyEvent.VK_D -> right = false;
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
 }
