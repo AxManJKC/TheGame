@@ -62,8 +62,20 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
 
-        
-
+        if (keyHandler.up) playerY -= playerSpeed;
+        if (keyHandler.down) playerY += playerSpeed;
+        if (keyHandler.left) playerX -= playerSpeed;
+        if (keyHandler.right) playerX += playerSpeed;
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+
+        super.paintComponent(g);
+
+        g.setColor(Color.WHITE);
+        g.fillRect(playerX, playerY, TILE_SIZE, TILE_SIZE);
+
+        g.dispose();
+    }
 }
