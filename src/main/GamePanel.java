@@ -1,17 +1,19 @@
 package main;
 
 import input.KeyHandler;
+import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
-    final int TILE_SIZE = 32;
-    final int SCREEN_WIDTH = TILE_SIZE * 20;
-    final int SCREEN_HEIGHT = TILE_SIZE * 15;
+    public final int TILE_SIZE = 32;
+    public final int SCREEN_WIDTH = TILE_SIZE * 20;
+    public final int SCREEN_HEIGHT = TILE_SIZE * 15;
 
     int playerX = 100, playerY = 100, speed = 4;
 
+    TileManager tileManager;
     KeyHandler keyHandler;
     Thread gameThread;
 
@@ -27,6 +29,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void startGameLoop() {
         gameThread = new Thread(this);
         gameThread.start();
+        tileManager = new TileManager(this);
     }
 
     @Override
@@ -48,6 +51,9 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+
+        tileManager.draw(g2);
         g.setColor(Color.WHITE);
         g.fillRect(playerX, playerY, TILE_SIZE, TILE_SIZE);
     }

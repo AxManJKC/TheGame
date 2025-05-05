@@ -1,6 +1,7 @@
 package main;
 
 import input.KeyHandler;
+import tile.TileManager;
 
 import javax.swing.*;
 
