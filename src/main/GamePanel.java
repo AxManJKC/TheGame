@@ -2,6 +2,7 @@ package main;
 
 import input.KeyHandler;
 import tile.TileManager;
+import entity.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +17,7 @@ public class GamePanel extends JPanel implements Runnable {
     TileManager tileManager;
     KeyHandler keyHandler;
     Thread gameThread;
+    Player player;
 
     public GamePanel(KeyHandler kh) {
         this.keyHandler = kh;
@@ -30,6 +32,7 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
         tileManager = new TileManager(this);
+        player = new Player(this, keyHandler);
     }
 
     @Override
@@ -42,10 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if (keyHandler.up) playerY -= speed;
-        if (keyHandler.down) playerY += speed;
-        if (keyHandler.left) playerX -= speed;
-        if (keyHandler.right) playerX += speed;
+        player.update();
     }
 
     @Override
@@ -54,7 +54,6 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         tileManager.draw(g2);
-        g.setColor(Color.WHITE);
-        g.fillRect(playerX, playerY, TILE_SIZE, TILE_SIZE);
+        player.draw(g2);
     }
 }
